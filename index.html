@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="UTF-8">
+<title>Математика – Интерактив Оюндар</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🎮 Математика – Интерактив Оюндар (5–9-класс)</h1>
+
+<!-- Фондук музыка (жаңы музыка) -->
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" autoplay loop></audio>
+
+<!-- Баскыч: Музыканы өчүр/күйгүз -->
+<button onclick="toggleMusic()" 
+        style="
+          position:fixed;
+          top:10px;
+          right:10px;
+          padding:8px 12px;
+          border-radius:5px;
+          background:#4CAF50;
+          color:white;
+          border:none;
+          cursor:pointer;
+        ">
+  🔊 Музыканы өчүр/күйгүз
+</button>
+
+<!-- Музыка тандоо менюсу (стиль менен, башка бөлүмдөрдү баспайт) -->
+<section id="musicMenu" style="
+    position:fixed; 
+    top:70px; 
+    right:10px; 
+    background:#fffae6; 
+    padding:10px; 
+    border-radius:10px; 
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+    z-index:1000;
+    width:180px;
+    font-family:Arial, sans-serif;
+">
+  <h3 style="margin:0 0 5px 0; font-size:16px; text-align:center; color:#ff6600;">🎵 Музыка танда</h3>
+  <button onclick="changeMusic('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')" 
+          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
+    Song 1
+  </button>
+  <button onclick="changeMusic('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3')" 
+          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
+    Song 2
+  </button>
+  <button onclick="changeMusic('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3')" 
+          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
+    Song 3
+  </button>
+  <button onclick="changeMusic('https://pixabay.com/download/audio/2022/03/15/audio_8d6c6c1f5d.mp3?filename=happy-background-music-11203.mp3')" 
+          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
+    Happy
+  </button>
+  <button onclick="changeMusic('https://www.bensound.com/bensound-music/bensound-creativeminds.mp3')" 
+          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
+    Creative
+  </button>
+</section>
+
+<script>
+  function changeMusic(url) {
+    var music = document.getElementById('bgMusic');
+    music.src = url;
+    music.play();
+  }
+</script>
+
+<!-- Бөлүм тандоо менюсу -->
+<section id="menu" class="active">
+  <h2>📚 Бөлүм танда</h2>
+  <button onclick="startGame('ops')">➕➖✖➗ Амалдар</button>
+  <button onclick="startGame('formula')">📐 Формулалар</button>
+  <button onclick="startGame('test')">❓ Тест</button>
+  <button onclick="startGame('tf')">✔❌ Туура/Ката</button>
+  <button onclick="startGame('cross')">🧩 Кроссворд</button>
+  <button onclick="startGame('logic')">🧠 Логика</button>
+  <button onclick="startGame('guess')">🎯 Сан тап</button>
+  <button onclick="startGame('timer')">⏱ Таймер оюну</button>
+  <button onclick="startGame('click')">🕹 Click Math</button>
+  <button onclick="startGame('surprise')">🎲 Сюрприз оюн</button>
+</section>
+
+<!-- Оюн экраны -->
+<section id="game" style="display:none; position:relative;">
+  <!-- Бөлүмгө кайтуу баскыч -->
+  <button onclick="backToMenu()" 
+          style="
+            position:absolute; 
+            top:10px; 
+            left:10px; 
+            padding:8px 12px; 
+            border-radius:5px; 
+            background:#ff5555; 
+            color:white; 
+            border:none; 
+            cursor:pointer;
+          ">
+    ⬅ Бөлүмгө кайтуу
+  </button>
+
+  <h2 id="title">+−×÷ Амалдар</h2>
+  <p id="progress">3 / 15</p>
+  <p id="question">6 × 4 = ?</p>
+
+  <input id="answer" placeholder="Жоопту жаз">
+  <br><br>
+
+  <button onclick="check()">Текшер</button>
+  <button id="nextBtn" onclick="next()" style="display:none">Кийинки</button>
+
+  <p id="result">❌ Туура жооп: 24</p>
+</section>
+
+<script src="script.js"></script>
+<script>
+  // Менюга кайтуу функциясы
+  function backToMenu() {
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('menu').style.display = 'block';
+  }
+
+  // Музыканы ойнотуу/токтотуу функциясы
+  function toggleMusic() {
+    var music = document.getElementById('bgMusic');
+    if (music.paused) {
+      music.play();
+    } else {
+      music.pause();
+    }
+  }
+
+  // Музыканы өзгөртүү функциясы
+  function changeMusic(url) {
+    var music = document.getElementById('bgMusic');
+    music.src = url;
+    music.play();
+  }
+</script>
+
+</body>
+</html>
