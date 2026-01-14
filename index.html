@@ -3,78 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <title>Математика – Интерактив Оюндар</title>
-<link rel="stylesheet" href="style.css">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+
+    /* Фондук сүрөт караңгылатылган */
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('https://pibig.info/uploads/posts/2023-11/1699093332_pibig-info-p-oboi-dlya-prezentatsii-o-matematike-instag-1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #fff;
+  }
+
+  h1 {
+    text-shadow: 2px 2px 6px #000;
+    margin-top: 20px;
+    font-size: 36px;
+  }
+
+  /* Музыка кнопкасы */
+  #musicBtn {
+    position: fixed;
+    top: 20px;   
+    right: 20px; 
+    padding: 12px 18px;
+    border-radius: 8px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
+
+  /* Меню бөлүмдөрү вертикалдуу жана музика кнопкасына жакын */
+  #menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px; /* меню ылдый түшүрүлдү */
+  }
+
+  #menu button {
+    width: 220px;
+    padding: 14px;
+    margin: 10px;
+    border: 3px solid #fff;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15); /* контрасттуу, бирок жарым ачык */
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  }
+
+  #menu button:hover {
+    background: rgba(255, 255, 255, 0.85);
+    color: #000;
+    border-color: #4CAF50;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+  }
+
+  /* Оюн экраны */
+  #game {
+    display: none;
+    position: relative;
+    margin-top: 50px;
+    text-shadow: 2px 2px 3px #000;
+  }
+
+  #game input {
+    padding: 8px;
+    width: 120px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+  }
+
+  #game button {
+    padding: 10px 18px;
+    margin: 5px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  #backBtn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff5555;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  }
+
+  #nextBtn {
+    display: none;
+  }
+
+  #result {
+    font-weight: bold;
+    margin-top: 12px;
+    font-size: 18px;
+  }
+</style>
 </head>
 <body>
 
 <h1>🎮 Математика – Интерактив Оюндар (5–9-класс)</h1>
 
-<!-- Фондук музыка (жаңы музыка) -->
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" autoplay loop></audio>
+<!-- Фондук музыка -->
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop autoplay></audio>
+<button id="musicBtn" onclick="toggleMusic()">🔊 Музыканы өчүр/күйгүз</button>
 
-<!-- Баскыч: Музыканы өчүр/күйгүз -->
-<button onclick="toggleMusic()" 
-        style="
-          position:fixed;
-          top:10px;
-          right:10px;
-          padding:8px 12px;
-          border-radius:5px;
-          background:#4CAF50;
-          color:white;
-          border:none;
-          cursor:pointer;
-        ">
-  🔊 Музыканы өчүр/күйгүз
-</button>
-
-<!-- Музыка тандоо менюсу (стиль менен, башка бөлүмдөрдү баспайт) -->
-<section id="musicMenu" style="
-    position:fixed; 
-    top:70px; 
-    right:10px; 
-    background:#fffae6; 
-    padding:10px; 
-    border-radius:10px; 
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
-    z-index:1000;
-    width:180px;
-    font-family:Arial, sans-serif;
-">
-  <h3 style="margin:0 0 5px 0; font-size:16px; text-align:center; color:#ff6600;">🎵 Музыка танда</h3>
-  <button onclick="changeMusic('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')" 
-          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
-    Song 1
-  </button>
-  <button onclick="changeMusic('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3')" 
-          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
-    Song 2
-  </button>
-  <button onclick="changeMusic('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3')" 
-          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
-    Song 3
-  </button>
-  <button onclick="changeMusic('https://pixabay.com/download/audio/2022/03/15/audio_8d6c6c1f5d.mp3?filename=happy-background-music-11203.mp3')" 
-          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
-    Happy
-  </button>
-  <button onclick="changeMusic('https://www.bensound.com/bensound-music/bensound-creativeminds.mp3')" 
-          style="width:100%; margin:3px 0; background:#ffd699; border:none; padding:5px; border-radius:5px; cursor:pointer;">
-    Creative
-  </button>
-</section>
-
-<script>
-  function changeMusic(url) {
-    var music = document.getElementById('bgMusic');
-    music.src = url;
-    music.play();
-  }
-</script>
-
-<!-- Бөлүм тандоо менюсу -->
-<section id="menu" class="active">
-  <h2>📚 Бөлүм танда</h2>
+<!-- Меню -->
+<section id="menu">
+  <h2 style="color:white; text-shadow:2px 2px 4px #000;">📚 Бөлүм танда</h2>
   <button onclick="startGame('ops')">➕➖✖➗ Амалдар</button>
   <button onclick="startGame('formula')">📐 Формулалар</button>
   <button onclick="startGame('test')">❓ Тест</button>
@@ -88,45 +144,21 @@
 </section>
 
 <!-- Оюн экраны -->
-<section id="game" style="display:none; position:relative;">
-  <!-- Бөлүмгө кайтуу баскыч -->
-  <button onclick="backToMenu()" 
-          style="
-            position:absolute; 
-            top:10px; 
-            left:10px; 
-            padding:8px 12px; 
-            border-radius:5px; 
-            background:#ff5555; 
-            color:white; 
-            border:none; 
-            cursor:pointer;
-          ">
-    ⬅ Бөлүмгө кайтуу
-  </button>
+<section id="game">
+  <button id="backBtn" onclick="backToMenu()">⬅ Бөлүмгө кайтуу</button>
 
   <h2 id="title">+−×÷ Амалдар</h2>
-  <p id="progress">3 / 15</p>
+  <p id="progress">0 / 5</p>
   <p id="question">6 × 4 = ?</p>
 
   <input id="answer" placeholder="Жоопту жаз">
   <br><br>
-
   <button onclick="check()">Текшер</button>
-  <button id="nextBtn" onclick="next()" style="display:none">Кийинки</button>
-
-  <p id="result">❌ Туура жооп: 24</p>
+  <button id="nextBtn" onclick="next()">Кийинки</button>
+  <p id="result" style="display:none">❌ Туура жооп: 24</p>
 </section>
 
-<script src="script.js"></script>
 <script>
-  // Менюга кайтуу функциясы
-  function backToMenu() {
-    document.getElementById('game').style.display = 'none';
-    document.getElementById('menu').style.display = 'block';
-  }
-
-  // Музыканы ойнотуу/токтотуу функциясы
   function toggleMusic() {
     var music = document.getElementById('bgMusic');
     if (music.paused) {
@@ -136,11 +168,58 @@
     }
   }
 
-  // Музыканы өзгөртүү функциясы
-  function changeMusic(url) {
-    var music = document.getElementById('bgMusic');
-    music.src = url;
-    music.play();
+  function startGame(section) {
+    document.getElementById('menu').style.display = 'none';
+    document.getElementById('game').style.display = 'block';
+    currentQuestion = 0;
+    score = 0;
+    nextQuestion();
+  }
+
+  function backToMenu() {
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('menu').style.display = 'flex';
+  }
+
+  const questions = [
+    {q: '6 × 4 = ?', a: 24},
+    {q: '12 ÷ 3 = ?', a: 4},
+    {q: '7 + 5 = ?', a: 12},
+    {q: '15 − 9 = ?', a: 6},
+    {q: '9 × 3 = ?', a: 27},
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  function nextQuestion() {
+    if (currentQuestion >= questions.length) {
+      alert('Оюн аяктады! Туура жооптор: ' + score + '/' + questions.length);
+      backToMenu();
+      return;
+    }
+    document.getElementById('question').innerText = questions[currentQuestion].q;
+    document.getElementById('progress').innerText = (currentQuestion + 1) + ' / ' + questions.length;
+    document.getElementById('answer').value = '';
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'none';
+  }
+
+  function check() {
+    let userAnswer = Number(document.getElementById('answer').value);
+    if (userAnswer === questions[currentQuestion].a) {
+      document.getElementById('result').innerText = '✅ Дагы жакшы!';
+      score++;
+    } else {
+      document.getElementById('result').innerText = '❌ Туура жооп: ' + questions[currentQuestion].a;
+    }
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+  }
+
+  function next() {
+    currentQuestion++;
+    nextQuestion();
   }
 </script>
 
