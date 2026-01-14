@@ -81,12 +81,59 @@ const games = {
       {q:"12×2=25", a:"Ката"},
       {q:"18÷6=3", a:"Туура"}
     ]
-  }
+  },
 
-  // Калган болумдорду ошондой эле кошсо болот (cross, logic, guess, timer, click, surprise)
+  cross: {
+    title: "🧩 Кроссворд",
+    list: [
+      {q:"Сан 3 менен бөлүнөт", a:"3"},
+      {q:"Бештен кем эмес сан", a:"5"},
+      {q:"Төрттөн көп сан", a:"6"}
+    ]
+  },
+
+  logic: {
+    title:"🧠 Логика маселелери",
+    list:[
+      {q:"Сиздин алдыңызда электрондук саат турат. Циферблаттын бардык уячалары (саат, мүнөт, секунд) бирдей санга толушу үчүн алар күнүнө канча жолу убакыт көрсөтөт?", a:"3"},
+      {q:"Элдин баары кимге барганда, баш кийимдерин чечишет?", a:"Чач тарачка"},
+      {q:"Космонавт космостон эмнесин жоготот?", a:"Салмагын"},
+      {q:"Эки ата, эки баласы менен жүрүп, үч апельсин таап алышты. Апельсинди бөлүшө келгенде бардыгы бирден алышты. Бул кандайча болушу мүмкүн?", a:"чоң атасы, атасы жана баласы"}
+    ]
+  },
+
+  guess: {
+    title:"🔢 Сан тап",
+    list:[
+      {q:"Мен 10дан кичине, 5тен чоң санмын. Мен киммин?", a:"7"},
+      {q:"Мен 20дан чоң эмес, 15тен чоң санмын. Мен киммин?", a:"16"}
+    ]
+  },
+
+  timer: {
+    title:"⏱ Таймер менен",
+    list:[
+      {q:"10+5 = ? (10 сек.)", a:"15", time:10},
+      {q:"7×3 = ? (5 сек.)", a:"21", time:5}
+    ]
+  },
+
+  click: {
+    title:"🖱 Басуу менен",
+    list:[
+      {q:"Бул оюнда экранга чыкылдат! (сен 'OK' басасың)", a:"OK"}
+    ]
+  },
+
+  surprise: {
+    title:"🎁 Сюрприз",
+    list:[
+      {q:"Кандайдыр сюрприз алуусуңду каалайсыңбы?", a:"Ооба"}
+    ]
+  }
 };
 
-let currentGame, index, score;
+let currentGame, index, score, timerInterval;
 
 function startGame(type){
   currentGame = games[type];
@@ -101,22 +148,54 @@ function startGame(type){
 }
 
 function loadQuestion(){
+  if(timerInterval) clearInterval(timerInterval);
+
   document.getElementById("progress").innerText = `${index+1} / ${currentGame.list.length}`;
   document.getElementById("question").innerText = currentGame.list[index].q;
-  document.getElementById("answer").value="";
-  document.getElementById("result").innerText="";
-  document.getElementById("nextBtn").style.display="none";
+  document.getElementById("answer").value = "";
+  document.getElementById("result").innerText = "";
+  document.getElementById("nextBtn").style.display = "none";
+
+  // Таймер
+  if(currentGame.list[index].time){
+    let timeLeft = currentGame.list[index].time;
+    document.getElementById("timer").innerText = `⏳ ${timeLeft} сек. калды`;
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      document.getElementById("timer").innerText = `⏳ ${timeLeft} сек. калды`;
+      if(timeLeft <= 0){
+        clearInterval(timerInterval);
+        document.getElementById("result").innerText = "⏱ Убакыт бүттү! Туура жооп: " + currentGame.list[index].a;
+        document.getElementById("nextBtn").style.display = "inline";
+      }
+    }, 1000);
+  } else {
+    document.getElementById("timer").innerText = "";
+  }
+
+  // Логика суроолор үчүн "Жумулган көз" кнопкасы
+  if(currentGame === games.logic){
+    let btn = document.createElement("button");
+    btn.id = "showAnswerBtn";
+    btn.innerText = "👁 Жоопту көрүү";
+    btn.onclick = () => {
+      document.getElementById("result").innerText = "👁 Жооп: " + currentGame.list[index].a;
+      document.getElementById("nextBtn").style.display = "inline";
+    };
+    document.getElementById("game").appendChild(btn);
+  }
 }
 
 function check(){
+  if(timerInterval) clearInterval(timerInterval);
   let user = document.getElementById("answer").value;
   if(user == currentGame.list[index].a){
     score++;
-    document.getElementById("result").innerText="✅ Туура!";
+    document.getElementById("result").innerText = "✅ Туура!";
   } else {
-    document.getElementById("result").innerText="❌ Туура жооп: "+currentGame.list[index].a;
+    document.getElementById("result").innerText = "❌ Туура жооп: " + currentGame.list[index].a;
   }
-  document.getElementById("nextBtn").style.display="inline";
+  document.getElementById("nextBtn").style.display = "inline";
 }
 
 function next(){
@@ -129,8 +208,9 @@ function next(){
       <button onclick="location.reload()">Бөлүм танда</button>`;
   }
 }
+
 function backToMenu(){
-  // Оюнду токтотуп менюга кайтуу
-  document.getElementById("game").style.display="none";
-  document.getElementById("menu").style.display="block";
+  if(timerInterval) clearInterval(timerInterval);
+  document.getElementById("game").style.display = "none";
+  document.getElementById("menu").style.display = "block";
 }
